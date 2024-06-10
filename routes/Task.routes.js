@@ -6,9 +6,10 @@ router.post("/tasks", async (req, res) => {
   try {
     const { text, completed } = req.body;
     const task = new Task({ text, completed });
+    const allTasks = await Task.find();
 
     await task.save();
-    return res.status(201).json(task);
+    return res.status(201).json(allTasks);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -18,13 +19,14 @@ router.delete("/tasks/:text", async (req, res) => {
   try {
     const { text } = req.params;
     const task = await Task.findOne({ text: text });
+    const allTasks = await Task.find();
 
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
 
     await task.deleteOne();
-    return res.status(204).send();
+    return res.status(204).json(allTasks);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -44,6 +46,7 @@ router.put("/tasks/:text", async (req, res) => {
     const { text } = req.params;
     const { completed } = req.body;
     const task = await Task.findOne({ text: text });
+    const allTasks = await Task.find();
 
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
@@ -51,7 +54,7 @@ router.put("/tasks/:text", async (req, res) => {
 
     task.completed = completed;
     await task.save();
-    return res.status(200).json(task);
+    return res.status(200).json(allTasks);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
