@@ -26,6 +26,7 @@ router.delete("/tasks/:text", async (req, res) => {
 
     await task.deleteOne();
     const allTasks = await Task.find();
+    console.log(allTasks);
     return res.status(204).json(allTasks);
   } catch (error) {
     return res.status(400).json({ error: error.message });
